@@ -35,7 +35,7 @@ conda create -n linkpred_env python=3.10
 conda activate linkpred_env
 ```
 
-## Install requirments
+## Install requirements
 
 Inside the project directory 
 
