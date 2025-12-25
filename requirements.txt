@@ -1,0 +1,9 @@
+torch==2.1.0
+torchdata==0.7.0
+dgl
+numpy==1.26.4
+packaging
+setuptools<69
+pandas
+pyyaml
+pydantic
