@@ -32,7 +32,7 @@ Create the environment and activate it
 
 ```bash
 conda create -n linkpred_env python=3.10
-conda activate linkpred_enf
+conda activate linkpred_env
 ```
 
 ## Install requirments
