@@ -7,3 +7,4 @@ setuptools<69
 pandas
 pyyaml
 pydantic
+networkx
