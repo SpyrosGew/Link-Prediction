@@ -8,3 +8,4 @@ pandas
 pyyaml
 pydantic
 networkx
+scikit-learn
