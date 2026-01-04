@@ -1,4 +1,6 @@
 from dataset import Dataset
+from node2vec_lp import run_node2vec_link_prediction
+
 
 from heuristics import (
     common_neighbors_score,
@@ -23,6 +25,11 @@ def main():
     print(f"Common Neighbors : {auc_cn:.4f}")
     print(f"Jaccard Coef.    : {auc_jc:.4f}")
     print(f"Adamic-Adar     : {auc_aa:.4f}")
+
+    auc_n2v = run_node2vec_link_prediction(dataset)
+
+    print("\n=== NODE2VEC + MLP ===")
+    print(f"AUC : {auc_n2v:.4f}")
 
 if __name__ == "__main__":
     main()

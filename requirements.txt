@@ -9,3 +9,5 @@ pyyaml
 pydantic
 networkx
 scikit-learn
+node2vec 
+gensim
