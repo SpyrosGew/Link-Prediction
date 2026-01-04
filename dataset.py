@@ -28,6 +28,10 @@ class Dataset:
         self._set_train_test()
         self._set_negative_edges()
 
+        # Assign node features back to train_graph for gcn train make sure to report this
+        for n in self.train_graph.nodes():
+            self.train_graph.nodes[n]["feat"] = self.dgl_graph.ndata['feat'][n].numpy()
+
         log_train_test_split(
             lcc_graph=self.lcc_graph,
             train_graph=self.train_graph,
