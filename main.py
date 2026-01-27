@@ -46,8 +46,10 @@ def main():
     # ------------------------
     print("\n=== GCN LINK PREDICTION ===")
 
-    gcn_model = train_gcn_link_predictor(dataset)
-    evaluate_gcn(gcn_model, dataset)
+    gcn_model, losses, train_aucs, test_aucs = train_gcn_link_predictor(dataset)
+    train_auc_final, test_auc_final = evaluate_gcn(gcn_model, dataset)
+
+    print(f"\nFinal Test AUC: {test_auc_final:.4f}")
 
 
 if __name__ == "__main__":

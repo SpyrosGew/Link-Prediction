@@ -6,6 +6,7 @@ packaging
 setuptools<69
 pandas
 pyyaml
+matplotlib
 pydantic
 networkx
 scikit-learn
