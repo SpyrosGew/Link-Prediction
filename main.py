@@ -1,6 +1,6 @@
 from dataset import Dataset
 from node2vec_lp import run_node2vec_link_prediction
-
+from gcn import train_gcn_link_predictor, evaluate_gcn
 
 from heuristics import (
     common_neighbors_score,
@@ -9,10 +9,17 @@ from heuristics import (
     evaluate_auc
 )
 
+
 def main():
+    # ------------------------
+    # Dataset
+    # ------------------------
     dataset = Dataset()
     dataset.prepare()
 
+    # ------------------------
+    # Heuristic baselines
+    # ------------------------
     G = dataset.train_graph
     pos = dataset.test_edges
     neg = dataset.negative_test_edges
@@ -26,10 +33,24 @@ def main():
     print(f"Jaccard Coef.    : {auc_jc:.4f}")
     print(f"Adamic-Adar     : {auc_aa:.4f}")
 
+    # ------------------------
+    # Node2Vec + MLP
+    # ------------------------
     auc_n2v = run_node2vec_link_prediction(dataset)
 
     print("\n=== NODE2VEC + MLP ===")
     print(f"AUC : {auc_n2v:.4f}")
+
+    # ------------------------
+    # GCN end-to-end link prediction
+    # ------------------------
+    print("\n=== GCN LINK PREDICTION ===")
+
+    gcn_model = train_gcn_link_predictor(dataset)
+    auc_gcn = evaluate_gcn(gcn_model, dataset)
+
+    print(f"AUC : {auc_gcn:.4f}")
+
 
 if __name__ == "__main__":
     main()
