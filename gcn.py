@@ -45,7 +45,7 @@ def sample_negative_edges(graph, num_samples):
 
 
 
-def train_gcn_link_predictor(dataset, epochs=200, lr=0.01):
+def train_gcn_link_predictor(dataset, epochs=500, lr=0.01):
     # ------------------------
     # Convert train graph to DGL with node features
     # ------------------------
@@ -91,9 +91,11 @@ def train_gcn_link_predictor(dataset, epochs=200, lr=0.01):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
 
         if epoch % 20 == 0:
             print(f"Epoch {epoch:03d} | Loss: {loss.item():.4f}")
+            evaluate_gcn(model, dataset)
 
     return model
 
@@ -111,18 +113,32 @@ def evaluate_gcn(model, dataset):
     with torch.no_grad():
         z = model(g, x)
 
-        # Map test edges to DGL indices
+        # Test set AUC
         pos_test = [(nx_to_dgl[u], nx_to_dgl[v]) for u, v in dataset.test_edges]
         neg_test = [(nx_to_dgl[u], nx_to_dgl[v]) for u, v in dataset.negative_test_edges]
 
-        scores = torch.cat([
+        test_scores = torch.cat([
             torch.sigmoid(dot_predict(z, pos_test)),
             torch.sigmoid(dot_predict(z, neg_test))
         ])
-
-        labels = torch.cat([
+        test_labels = torch.cat([
             torch.ones(len(pos_test)),
             torch.zeros(len(neg_test))
         ])
+        test_auc = roc_auc_score(test_labels.numpy(), test_scores.numpy())
 
-    return roc_auc_score(labels.numpy(), scores.numpy())
+        # Train set AUC
+        pos_train = [(nx_to_dgl[u], nx_to_dgl[v]) for u, v in dataset.train_graph.edges()]
+        neg_train = [(nx_to_dgl[u], nx_to_dgl[v]) for u, v in sample_negative_edges(dataset.train_graph, len(pos_train))]
+
+        train_scores = torch.cat([
+            torch.sigmoid(dot_predict(z, pos_train)),
+            torch.sigmoid(dot_predict(z, neg_train))
+        ])
+        train_labels = torch.cat([
+            torch.ones(len(pos_train)),
+            torch.zeros(len(neg_train))
+        ])
+        train_auc = roc_auc_score(train_labels.numpy(), train_scores.numpy())
+
+        print(f"Train AUC: {train_auc:.4f} | Test AUC: {test_auc:.4f}")
