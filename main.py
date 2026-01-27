@@ -47,9 +47,8 @@ def main():
     print("\n=== GCN LINK PREDICTION ===")
 
     gcn_model = train_gcn_link_predictor(dataset)
-    auc_gcn = evaluate_gcn(gcn_model, dataset)
+    evaluate_gcn(gcn_model, dataset)
 
-    print(f"AUC : {auc_gcn:.4f}")
 
 
 if __name__ == "__main__":
